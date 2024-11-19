@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirection par horaire et inactivité</title>
+    <script>
+        // Délai d'inactivité en millisecondes (3 minutes = 180000 ms)
+        const inactivityTimeout = 180000;
+        let inactivityTimer;
+
+        function resetTimer() {
+            // Réinitialiser le minuteur à chaque interaction de l'utilisateur
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(redirectToSite, inactivityTimeout);
+        }
+
+        function redirectToSite() {
+            const now = new Date();
+            const currentHour = now.getHours();
+            const currentDay = now.getDay(); // 0 = Dimanche, 1 = Lundi, ..., 6 = Samedi
+
+            // Liens associés
+            const linkRegularHours = "https://sites.google.com/view/zoneconseil/zone-conseil-r%C3%A9guli%C3%A8re-pendant-les-heures-douverture";
+            const linkHome = "https://sites.google.com/view/zone-conseil?usp=sharing";
+            const linkOutsideHours = "https://sites.google.com/view/ouverture1?usp=sharing";
+
+            // Condition : Entre 9h et 15h (lundi à vendredi)
+            if (currentDay >= 1 && currentDay <= 5 && currentHour >= 9 && currentHour < 15) {
+                window.location.href = linkRegularHours;
+            } 
+            // Condition : Entre 7h et 9h et entre 15h et 17h (lundi à vendredi)
+            else if (currentDay >= 1 && currentDay <= 5 && ((currentHour >= 7 && currentHour < 9) || (currentHour >= 15 && currentHour < 17))) {
+                window.location.href = linkHome;
+            } 
+            // En dehors de ces heures
+            else {
+                window.location.href = linkOutsideHours;
+            }
+        }
+
+        // Réinitialiser le minuteur à chaque action de l'utilisateur
+        window.onload = resetTimer;
+        window.onmousemove = resetTimer;
+        window.onkeydown = resetTimer;
+        window.onclick = resetTimer;
+        window.onscroll = resetTimer;
+    </script>
+</head>
+<body onload="redirectToSite()">
+    <h1>Page de redirection</h1>
+    <p>Cette page redirige en fonction de l'horaire et gère également l'inactivité.</p>
+</body>
+</html>
